@@ -1,4 +1,45 @@
 <template>
+  <div class="dateContent">
+<span> <el-button type="text" @click="showCard = !showCard">日程表</el-button> <el-button type="primary"
+                     icon="el-icon-edit"
+                     @click="dialogFormVisible = true;"
+                     size="mini"
+                     circle></el-button></span>
+    <transition name="el-fade-in">
+    <el-card class="box-card" v-show="showCard">
+      <div v-for="(item,index) in form" :key="item" class="text item">
+        {{'时间：' + item.date }}
+        <br>
+        {{'待办事项：' + item.content }}
+        <el-button type="danger"
+                   style="float: right"
+                   size="mini"
+                   icon="el-icon-delete"
+                   circle @click="delcontent(index)"></el-button>
+      </div>
+    </el-card>
+    </transition>
+    <el-dialog title="日程表" v-model="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="时间" :label-width="formLabelWidth">
+          <el-input v-model="date" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="活动区域" :label-width="formLabelWidth">
+          <el-input v-model="content" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+    <span class="dialog-footer">
+      <el-button @click="dialogFormVisible = false"
+                 type="success"
+                 >取 消</el-button>
+      <el-button type="primary"
+                 @click="dialogFormVisible =
+                 false;addDate()">确 定</el-button>
+    </span>
+      </template>
+    </el-dialog>
+  </div>
 <header>
 <!--  显示时间-->
   <div class="datebox">
@@ -18,12 +59,6 @@
               @blur="blur">
 
     </el-input>
-
-
-<!--        <el-card shadow="always" v-if="isSearch">-->
-<!--          总是显示-->
-<!--        </el-card>-->
-
 
   </div>
 
@@ -145,19 +180,36 @@ export default {
   data() {
     return {
       newDate: new Date(),
+      dialogTableVisible: false,
+      dialogFormVisible: false,
       wd:'',
       show:false,
-      isfocus:focus()
+      // form:[{
+      //   date:'8.11',
+      //   content:'吃饭睡觉打豆豆'
+      // },
+      //   {
+      //     date:'8.12',
+      //     content:'吃饭'
+      //   }
+      // ],
+      form:[],
+      id:'',
+      date:'',
+      content:'',
+      formLabelWidth: '100px',
+      showCard:true
+
     }
   },
 // 挂载时间
   mounted() {
-    alert(123)
     let that = this
     this.timer = setInterval(function () {
       that.newDate = new Date().toLocaleString()
     })
   },
+
   methods: {
     // 时间格式化
     dateFormat() {
@@ -179,9 +231,41 @@ export default {
        if(event.keyCode==13)
           //如果你按的是enter，那么就跳转到百度搜索结果
           window.open("https://www.baidu.com/s?wd="+this.wd);
-        }
+        },
+    delcontent(index){
+      const temp = this.form
+      // const list = JSON.parse(localStorage.getItem("form") || '[]')
+      // console.log(list)
+      temp.splice(index,1)
+      // const newlist = list.splice(index,1)
+      localStorage.setItem('form',JSON.stringify(temp))
+      // console.log(newlist)
+      // window.location.reload()
+      this.form =  JSON.parse(localStorage.getItem("form") || '[]')
 
+    },
+    addDate(){
+      const comment = {id:Date.now(), date:this.date, content:this.content}
+      //从localStorage中获取所用的评论
+      const list = JSON.parse(localStorage.getItem("form") || '[]')
+      list.unshift(comment)
+      //重新保存最新的评论数据
+      localStorage.setItem('form',JSON.stringify(list))
+      this.date = this.content = ''
+      this.$emit('func')
+      window.location.reload()
+    },
+
+    loadComments(){
+      const list = JSON.parse(localStorage.getItem("form") || '[]')
+      this.form = list
+    }
   },
+  created(){
+    this.loadComments()
+  },
+
+
   computed: {
     isSearch() {
       return this.isFocus;
@@ -210,7 +294,7 @@ export default {
   font-size: 25px;
   background-color: rgba(255,255,255, 0.4);
   border-style: none;
-  /*margin-left: -1%;*/
+  margin-left: -17%;
   margin-top: 5%;
   margin-bottom: 3%;
   border-radius: 15px;
@@ -226,6 +310,8 @@ export default {
 .iconall{
   width: 700px;
   height: 350px;
+  /*position: relative;*/
+  /*left: 26%;*/
   margin: 50px auto;
   display: flex;
    /*让一行中的元素平均分配宽度 */
@@ -307,5 +393,50 @@ p{
 #input{
   transition: all 0.3s ease-out;
 }
+.dateContent{
+  width: 250px;
+  /*height: 100px;*/
+  background-color: rgba(255,255,255, 0.3);
+  float: left;
+  margin-left: 1%;
+  margin-top: 3%;
+}
+.dateContent span{
+  color: white;
+  font-size: 20px;
+}
 
+/*日程表*/
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.box-card {
+  width: 248px;
+  transition: all 0.2s ease-out;
+}
+
+.card-header button{
+  height: 20px;
+}
+.text{
+  text-align: left;
+}
+
+.el-button--danger{
+  --el-button-background-color:#fff
+}
+.el-card{
+  --el-card-background-color:rgba(255,255,255, 0.3);
+}
 </style>
