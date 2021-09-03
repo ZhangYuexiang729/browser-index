@@ -1,178 +1,187 @@
 <template>
-  <div class="dateContent">
-<span> <el-button type="text" @click="showCard = !showCard">日程表</el-button> <el-button type="primary"
-                     icon="el-icon-edit"
-                     @click="dialogFormVisible = true;"
-                     size="mini"
-                     circle></el-button></span>
-    <transition name="el-fade-in">
-    <el-card class="box-card" v-show="showCard">
-      <div v-for="(item,index) in form" :key="item" class="text item">
-        {{'时间：' + item.date }}
-        <br>
-        {{'待办事项：' + item.content }}
-        <el-button type="danger"
-                   style="float: right"
-                   size="mini"
-                   icon="el-icon-delete"
-                   circle @click="delcontent(index)"></el-button>
-      </div>
-    </el-card>
-    </transition>
-    <el-dialog title="日程表" v-model="dialogFormVisible">
-      <el-form :model="form">
-        <el-form-item label="时间" :label-width="formLabelWidth">
-          <el-input v-model="date" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="活动区域" :label-width="formLabelWidth">
-          <el-input v-model="content" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
+<!--  总体框-->
+  <div class="allcontent">
+<!--    左侧-->
+    <div class="leftContent">
+<!--      日程表-->
+      <div class="dateContent">
+<span>
+  <el-button type="text" @click="showCard = !showCard">日程表</el-button>
+  <el-button type="primary"
+             icon="el-icon-edit"
+             @click="dialogFormVisible = true;"
+             size="mini"
+             circle></el-button>
+</span>
+        <transition name="el-fade-in">
+          <el-card class="box-card" v-show="showCard">
+            <div v-for="(item,index) in form" :key="item" class="text item">
+              {{'时间：' + item.date }}
+              <br>
+              {{'待办事项：' + item.content }}
+              <el-button type="danger"
+                         style="float: right"
+                         size="mini"
+                         icon="el-icon-delete"
+                         circle @click="delcontent(index)"></el-button>
+            </div>
+          </el-card>
+        </transition>
+        <el-dialog title="日程表" v-model="dialogFormVisible">
+          <el-form :model="form">
+            <el-form-item label="时间" :label-width="formLabelWidth">
+              <el-input v-model="date" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="待办事项" :label-width="formLabelWidth">
+              <el-input v-model="content" autocomplete="off"></el-input>
+            </el-form-item>
+          </el-form>
+          <template #footer>
     <span class="dialog-footer">
       <el-button @click="dialogFormVisible = false"
                  type="success"
-                 >取 消</el-button>
+      >取 消</el-button>
       <el-button type="primary"
                  @click="dialogFormVisible =
                  false;addDate()">确 定</el-button>
     </span>
-      </template>
-    </el-dialog>
-  </div>
-<header>
-<!--  显示时间-->
-  <div class="datebox">
-      <el-button class="date" @click="show = !show"  plain>
-        <span>{{ dateFormat(newDate) }}</span>
-      </el-button>
-  </div>
-</header>
-<!--  搜索框-->
-  <div class="content">
-    <el-input v-model="wd"
-              @keydown="keydown($event)"
-              placeholder="请输入搜索内容，按回车键搜索"
-              type="text"
-              id="input"
-              @focus="focus"
-              @blur="blur">
-
-    </el-input>
-
-  </div>
-
-<!--用来放标签页-->
-  <transition name="el-fade-in-linear">
-<div class="iconall" v-show="show" >
-  <div class="iconbox">
-    <a class="iconBackBox" href="https://www.bilibili.com/" target="_blank">
-      <div class="img">
-        <img src="../src/assets/icon/bilibili.png" alt="bilibili">
+          </template>
+        </el-dialog>
       </div>
-      <p>bilibili</p>
-    </a>
-  </div>
-
-<!--  -->
-  <div class="iconbox">
-  <a class="iconBackBox" href="https://github.com/" target="_blank">
-    <div class="img">
-    <img src="../src/assets/icon/github.png" alt="github">
     </div>
-      <p>github</p>
-  </a>
-  </div>
-
-  <!--  -->
-  <div class="iconbox">
-    <a class="iconBackBox" href="https://www.cnki.net/" target="_blank">
-      <div class="img">
-        <img src="../src/assets/icon/zhiwang.png" alt="知网">
+<!--    中间-->
+    <div class="centerContent">
+<!--      时间框-->
+      <div class="datebox">
+        <el-button class="date" @click="show = !show"  plain>
+          <span>{{ dateFormat(newDate) }}</span>
+        </el-button>
       </div>
-      <p>知网</p>
-    </a>
-  </div>
+<!--      搜索框-->
+      <div class="content">
+        <el-input v-model="wd"
+                  @keydown="keydown($event)"
+                  placeholder="请输入搜索内容，按回车键搜索"
+                  type="text"
+                  id="input"
+                  @focus="focus"
+                  @blur="blur">
+        </el-input>
 
-
-  <!--  -->
-  <div class="iconbox">
-    <a class="iconBackBox" href="https://www.taobao.com/" target="_blank">
-      <div class="img">
-        <img src="../src/assets/icon/淘宝.png" alt="淘宝">
       </div>
-      <p>淘宝</p>
-    </a>
-  </div>
+<!--      标签页-->
+      <transition name="el-fade-in-linear">
+        <div class="iconall" v-show="show" >
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://www.bilibili.com/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/bilibili.png" alt="bilibili">
+              </div>
+              <p>bilibili</p>
+            </a>
+          </div>
 
-  <!--  -->
-  <div class="iconbox">
-    <a class="iconBackBox" href="https://www.jd.com/" target="_blank">
-      <div class="img">
-        <img src="../src/assets/icon/京东.png" alt="京东">
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://github.com/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/github.png" alt="github">
+              </div>
+              <p>github</p>
+            </a>
+          </div>
+
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://www.cnki.net/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/zhiwang.png" alt="知网">
+              </div>
+              <p>知网</p>
+            </a>
+          </div>
+
+
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://www.taobao.com/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/淘宝.png" alt="淘宝">
+              </div>
+              <p>淘宝</p>
+            </a>
+          </div>
+
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://www.jd.com/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/京东.png" alt="京东">
+              </div>
+              <p>京东</p>
+            </a>
+          </div>
+
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://i.mooc.chaoxing.com/space/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/学习通.png" alt="学习通">
+              </div>
+              <p>学习通</p>
+            </a>
+          </div>
+
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://fanyi.youdao.com/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/语言翻译.png" alt="有道在线翻译">
+              </div>
+              <p>有道翻译</p>
+            </a>
+          </div>
+
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://www.pianku.li/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/tv.png" alt="片库">
+              </div>
+              <p>片库</p>
+            </a>
+          </div>
+
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://weibo.com/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/微博.png" alt="微博">
+              </div>
+              <p>微博</p>
+            </a>
+          </div>
+
+          <!--  -->
+          <div class="iconbox">
+            <a class="iconBackBox" href="https://chrome.zzzmh.cn/" target="_blank">
+              <div class="img">
+                <img src="../src/assets/icon/插件.png" alt="Chrome插件">
+              </div>
+              <p>Chrome插件</p>
+            </a>
+          </div>
+        </div>
+      </transition>
+      <div class="sentence1">
+        <span class="sentence">但行好事，莫问前程 </span>
       </div>
-      <p>京东</p>
-    </a>
-  </div>
-
-  <!--  -->
-  <div class="iconbox">
-    <a class="iconBackBox" href="https://i.mooc.chaoxing.com/space/" target="_blank">
-      <div class="img">
-        <img src="../src/assets/icon/学习通.png" alt="学习通">
-      </div>
-      <p>学习通</p>
-    </a>
-  </div>
-
-  <!--  -->
-  <div class="iconbox">
-  <a class="iconBackBox" href="https://fanyi.youdao.com/" target="_blank">
-    <div class="img">
-      <img src="../src/assets/icon/语言翻译.png" alt="有道在线翻译">
     </div>
-    <p>有道翻译</p>
-  </a>
-</div>
-
-  <!--  -->
-  <div class="iconbox">
-    <a class="iconBackBox" href="https://www.pianku.li/" target="_blank">
-      <div class="img">
-        <img src="../src/assets/icon/tv.png" alt="片库">
-      </div>
-      <p>片库</p>
-    </a>
+<!--    右侧占位-->
+    <div class="rightContent">
+    </div>
   </div>
 
-  <!--  -->
-  <div class="iconbox">
-    <a class="iconBackBox" href="https://weibo.com/" target="_blank">
-      <div class="img">
-        <img src="../src/assets/icon/微博.png" alt="微博">
-      </div>
-      <p>微博</p>
-    </a>
-  </div>
-
-  <!--  -->
-  <div class="iconbox">
-    <a class="iconBackBox" href="https://chrome.zzzmh.cn/" target="_blank">
-      <div class="img">
-        <img src="../src/assets/icon/插件.png" alt="Chrome插件">
-      </div>
-      <p>Chrome插件</p>
-    </a>
-  </div>
-</div>
-  </transition>
-
-<div class="sentence1">
-  <span class="sentence">但行好事，莫问前程 </span>
-</div>
-  <footer>
-
-  </footer>
 </template>
 
 <script>
@@ -284,43 +293,59 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+.allcontent{
+    display: flex;
+}
+.leftContent{
+  width: 20%;
 
+
+}
+.centerContent{
+  width: 60%;
+
+
+}
+.rightContent{
+  width: 20%;
+
+
+}
 .logo {
   width: 50%;
 }
 .date{
-  width: 380px;
-  height: 60px;
-  font-size: 25px;
+  width: 20em;
+  height: 2em;
+  font-size: 1.56em;
   background-color: rgba(255,255,255, 0.4);
   border-style: none;
-  margin-left: -17%;
+  /*margin-left: -17%;*/
   margin-top: 5%;
   margin-bottom: 3%;
-  border-radius: 15px;
+  border-radius: 1em;
 }
 .el-button{
   color: #2c5050;
 }
 .content{
-  width: 750px;
-  height: 50px;
+  width: 47em;
+  height: 3em;
   margin: 0 auto;
 }
 .iconall{
-  width: 700px;
-  height: 350px;
+  width: 44em;
+  height: 22em;
   /*position: relative;*/
   /*left: 26%;*/
-  margin: 50px auto;
+  margin: 3em auto;
   display: flex;
    /*让一行中的元素平均分配宽度 */
   justify-content: space-around;
   align-items: center;
   /*!* 元素在一行放不下时自动换行 *!*/
   flex-wrap: wrap;
-  /*width: 700px;*/
-  /*height: 600px;*/
+
 }
  .iconbox {
   display: flex;
@@ -328,27 +353,27 @@ export default {
   align-items: center;
   /* 让元素垂直排列 这里就是让包含图片的div和文字垂直排列 */
   flex-direction: column;
-  width: 100px;
-  height: 140px;
-  margin: 20px;
+  width: 6em;
+  height: 9em;
+  margin: 1em;
   /* 鼠标放上去变成小手 */
   cursor: pointer;
 
 }
- .iconbox .img{
-   display: flex;
-   /*在主轴上居中*/
-   justify-content: center;
-   align-items: center;
-   width: 100px;
-   height: 100px;
-   border-radius: 20px;
-   background-color: #fff;
-   box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.5), -18px -18px 30px rgba(255, 255, 255, 0.5);
-   /*box-shadow:-1px 0 20px #3B3B3B, 1px 0 20px #3B3B3B, 0 -1px 20px #3B3B3B, 0 1px 20px #3B3B3B;*/
-   /* 过渡时间 ease-out是指先快速 后慢速 */
-   transition: all 0.2s ease-out;
- }
+.iconbox .img{
+  display: flex;
+  /*在主轴上居中*/
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: 18px 18px 30px rgba(0, 0, 0, 0.5), -18px -18px 30px rgba(255, 255, 255, 0.5);
+  /*box-shadow:-1px 0 20px #3B3B3B, 1px 0 20px #3B3B3B, 0 -1px 20px #3B3B3B, 0 1px 20px #3B3B3B;*/
+  /* 过渡时间 ease-out是指先快速 后慢速 */
+  transition: all 0.2s ease-out;
+}
 img {
   width: 60px;
   transition: all 0.2s ease-out;
@@ -367,34 +392,34 @@ p{
 }
 
 .img:hover img {
-  width: 50px;
+  width: 3em;
 }
 .el-input{
-  height: 70px;
+  height: 4em;
 }
 .sentence{
-  line-height: 36px;
+  line-height: 2em;
   color: #ffffff;
-  font-size: 20px;
+  font-size: 1.5em;
 }
 .sentence1{
- width: 300px;
-  height: 40px;
+ width: 19em;
+  height: 2.5em;
   background-color: rgba(169,169,169, 0.2);
   position: fixed;
-  margin-top: 10px;
+  margin-top: 1em;
   left: 40%;
 }
 #input:focus{
-  height: 56px;
+  height: 3.5em;
   transition: all 0.3s ease-out;
-  margin-bottom: 20px;
+  margin-bottom: 1em;
 }
 #input{
   transition: all 0.3s ease-out;
 }
 .dateContent{
-  width: 250px;
+  width: 15.6em;
   /*height: 100px;*/
   background-color: rgba(255,255,255, 0.3);
   float: left;
@@ -403,7 +428,7 @@ p{
 }
 .dateContent span{
   color: white;
-  font-size: 20px;
+  font-size: 1em;
 }
 
 /*日程表*/
@@ -414,25 +439,24 @@ p{
 }
 
 .text {
-  font-size: 14px;
+  font-size: 1em;
 }
 
 .item {
-  margin-bottom: 18px;
+  margin-bottom: 1em;
 }
 
 .box-card {
-  width: 248px;
+  width: 15.5em;
   transition: all 0.2s ease-out;
 }
 
 .card-header button{
-  height: 20px;
+  height: 1em;
 }
 .text{
   text-align: left;
 }
-
 .el-button--danger{
   --el-button-background-color:#fff
 }

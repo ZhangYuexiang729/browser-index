@@ -1,7 +1,6 @@
 /*全局样式表*/
 html,body,#app{
     background-image: url("1626880371617.jpeg");
-    /*background-size:100%;*/
     background-size: 100% auto;
     justify-content: center;
     align-items: center;
